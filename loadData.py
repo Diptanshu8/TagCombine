@@ -1,9 +1,10 @@
 import codecs
+import sys
 import numpy as np
 
-comments_meta_file = 'data/comments-meta-marked.csv'
+comments_meta_file = 'data/comments-meta.csv'
 comments_text_file = 'data/comments-text.csv'
-posts_meta_file = 'data/posts-meta-marked.csv'
+posts_meta_file = 'data/posts-meta.csv'
 posts_body_file = 'data/posts-body.csv'
 posts_title_file = 'data/posts-title.csv'
 posts_tags_file = 'data/posts-tags.csv'
@@ -135,14 +136,15 @@ def loadQuestions(num, getTags = True):
     date = vals[4]
     score = int(vals[5])
     views = int(vals[6])
-    titleByte = int(vals[10])
-    tagsByte = int(vals[11])
-    bodyByte = int(vals[12])
+    titleByte = sys.getsizeof(vals[10])
+    tagsByte = sys.getsizeof(vals[11])
+    bodyByte = sys.getsizeof(vals[12])
     if vals[3] != '':
       bestAnswerId = int(vals[3])
     else:
       bestAnswerId = None
     questions[id] = Question(id, bestAnswerId, date, score, views, userId, titleByte, tagsByte, bodyByte)
+    #questions[id] = Question(id, bestAnswerId, date, score, views, userId)
     if getTags:
       tag_file.seek(tagsByte)
       tag_list = tag_file.readline().replace('<', ' ').replace('>', ' ').split()
@@ -183,7 +185,7 @@ def loadAnswers():
     id = int(vals[0])
     date = vals[4]
     score = int(vals[5])
-    bodyByte = int(vals[12])
+    bodyByte = sys.getsizeof(vals[12])
     answers[id] = Answer(id, questionId, date, score, userId, bodyByte)
     questions[questionId].answers.append(id)
     users[userId].answers.append(id)

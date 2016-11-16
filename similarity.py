@@ -54,11 +54,13 @@ def findSimilarTags(topPosts, questions):
   totalVotes = 0
   for id in topPosts:
     question = questions[id]
+    #print question.tags
     for tagId in question.tags:
       tagVotes[tagId] += 1
       totalVotes += 1
   for id in tagVotes:
     tagVotes[id] /= totalVotes
+  #print topPosts,totalVotes
   return tagVotes
 
 

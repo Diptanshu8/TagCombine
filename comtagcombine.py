@@ -123,7 +123,10 @@ def recall_k(k, topTags, actualTags, qid, denominator):
   for i in xrange(num):
     if topTags[i] in actualTags:
       recall_score += 1.0
-  r = recall_score / denominator
+  if denominator:
+    r = recall_score / denominator
+  else:
+    r=0
   if questionTagsPopOnly[qid] == 0:
     rPop = 0
   else:
@@ -186,10 +189,11 @@ def comTagCombineModelTest(trainQuestions, testQuestions, outfile=None):
             sortedTags = sorted(comTagCombineD, key=lambda x: comTagCombineD[x], reverse=True)
             num = min(10, len(sortedTags))
             topTags = sortedTags[0:num]
-            (r5, r5pop) = recall_k(5, topTags, question.tags, qid, len(question.tags))
-            (r10, r10pop) = recall_k(10, topTags, question.tags, qid, len(question.tags))
-            (r5syn, r5synpop) = recall_k(5, topTags, questionTagsSyn[qid], qid, len(question.tags))
-            (r10syn, r10synpop) = recall_k(10, topTags, questionTagsSyn[qid], qid, len(question.tags))
+            denominator=len(question.tags)
+            (r5, r5pop) = recall_k(5, topTags, question.tags, qid, denominator) 
+            (r10, r10pop) = recall_k(10, topTags, question.tags, qid, denominator)
+            (r5syn, r5synpop) = recall_k(5, topTags, questionTagsSyn[qid], qid, denominator)
+            (r10syn, r10synpop) = recall_k(10, topTags, questionTagsSyn[qid], qid, denominator)
             r5_sum += r5
             r5pop_sum += r5pop
             r5syn_sum += r5syn
@@ -198,7 +202,6 @@ def comTagCombineModelTest(trainQuestions, testQuestions, outfile=None):
             r10pop_sum += r10pop
             r10syn_sum += r10syn
             r10synpop_sum += r10synpop
-
           r5_avg = r5_sum / len(testQuestions)
           r5pop_avg = r5pop_sum / len(testQuestions)
           r5syn_avg = r5syn_sum / len(testQuestions)
@@ -223,7 +226,7 @@ def comTagCombineModelTest(trainQuestions, testQuestions, outfile=None):
 
 ## Comment out this entire block if not running from Python shell
 ld.loadData(True)
-# This function must be run. Be careful if this is commented out.
+## This function must be run. Be careful if this is commented out.
 setQuestionModelModifications(ld.questions)
 folds = ld.getCVFolds()
 print 'Generating word vectors'
