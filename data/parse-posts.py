@@ -22,7 +22,7 @@ end = end[:1] + '/' + end[1:]
 
 lines = 0
 outfile_meta.write('## %s\n' % (OUTPUT_META))
-outfile_meta.write('## Id,PostTypeId,ParentId,AcceptedAnswerId,CreationDate,Score,ViewCount,OwnerUserId,AnswerCount,CommentCount\n');
+outfile_meta.write('## Id,PostTypeId,ParentId,AcceptedAnswerId,CreationDate,Score,ViewCount,OwnerUserId,AnswerCount,CommentCount,titleByte,tagsByte,bodyByte\n');
 outfile_title.write('## %s\n' % (OUTPUT_TITLE))
 outfile_title.write('## Id,Title\n');
 outfile_body.write('## %s\n' % (OUTPUT_BODY))
@@ -38,9 +38,10 @@ while True:
     break
   data = ET.fromstring(s)
   attr = data.attrib
+  #print attr['Title']
 
   outfile_meta.write(
-    '%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n' % (
+    '%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n' % (
       attr.get('Id', ''),
       attr.get('PostTypeId', ''),
       attr.get('ParentId', ''),
@@ -51,7 +52,10 @@ while True:
       attr.get('OwnerUserId', ''),
       attr.get('AnswerCount', ''),
       attr.get('CommentCount', ''),
-    )
+      attr.get('Body', '').replace('\n', ' ').replace('\r', ' '),
+      attr.get('Title', '').replace('\n', ' ').replace('\r', ' '),
+      attr.get('Tags', '').replace('\n', ' ').replace('\r', ' '),
+      )
   )
   outfile_title.write(
     '%s,%s\n' % (
@@ -68,7 +72,7 @@ while True:
   outfile_tags.write(
     '%s,%s\n' % (
       attr.get('Id', ''),
-      attr.get('Tags', ''),
+      attr.get('Tags', '').replace('\n', ' ').replace('\r', ' '),
     )
   )
   if lines % 10000 == 0:
