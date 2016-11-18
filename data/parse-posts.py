@@ -29,7 +29,8 @@ outfile_body.write('## %s\n' % (OUTPUT_BODY))
 outfile_body.write('## Id,Body\n');
 outfile_tags.write('## %s\n' % (OUTPUT_TAGS))
 outfile_tags.write('## Id,Tags\n');
-
+count1=0
+count2=0
 # Parse file. Write output to file as we go.
 while True:
   s = infile.readline()
@@ -38,46 +39,48 @@ while True:
     break
   data = ET.fromstring(s)
   attr = data.attrib
-  #print attr['Title']
+  for item in attr:
+    if str(item)=="Tags":
+		
 
-  outfile_meta.write(
-    '%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n' % (
-      attr.get('Id', ''),
-      attr.get('PostTypeId', ''),
-      attr.get('ParentId', ''),
-      attr.get('AcceptedAnswerId', ''),
-      attr.get('CreationDate', ''),
-      attr.get('Score', ''),
-      attr.get('ViewCount', ''),
-      attr.get('OwnerUserId', ''),
-      attr.get('AnswerCount', ''),
-      attr.get('CommentCount', ''),
-      attr.get('Body', '').replace('\n', ' ').replace('\r', ' '),
-      attr.get('Title', '').replace('\n', ' ').replace('\r', ' '),
-      attr.get('Tags', '').replace('\n', ' ').replace('\r', ' '),
+      outfile_meta.write(
+        '%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n' % (
+          attr.get('Id', ''),
+          attr.get('PostTypeId', ''),
+          attr.get('ParentId', ''),
+          attr.get('AcceptedAnswerId', ''),
+          attr.get('CreationDate', ''),
+          attr.get('Score', ''),
+          attr.get('ViewCount', ''),
+          attr.get('OwnerUserId', ''),
+          attr.get('AnswerCount', ''),
+          attr.get('CommentCount', ''),
+          attr.get('Body', '').replace('\n', ' ').replace('\r', ' '),
+          attr.get('Title', '').replace('\n', ' ').replace('\r', ' '),
+          attr.get('Tags', '').replace('\n', ' ').replace('\r', ' '),
+          )
       )
-  )
-  outfile_title.write(
-    '%s,%s\n' % (
-      attr.get('Id', ''),
-      attr.get('Title', '').replace('\n', ' ').replace('\r', ' '),
-    )
-  )
-  outfile_body.write(
-    '%s,%s\n' % (
-      attr.get('Id', ''),
-      attr.get('Body', '').replace('\n', ' ').replace('\r', ' '),
-    )
-  )
-  outfile_tags.write(
-    '%s,%s\n' % (
-      attr.get('Id', ''),
-      attr.get('Tags', '').replace('\n', ' ').replace('\r', ' '),
-    )
-  )
-  if lines % 10000 == 0:
-    print 'Parsed %d lines' % (lines)
-
+      outfile_title.write(
+        '%s,%s\n' % (
+          attr.get('Id', ''),
+          attr.get('Title', '')
+        )
+      )
+      outfile_body.write(
+        '%s,%s\n' % (
+          attr.get('Id', ''),
+          attr.get('Body', '')
+        )
+      )
+      outfile_tags.write(
+        '%s,%s\n' % (
+          attr.get('Id', ''),
+          attr.get('Tags', '')
+        )
+      )
+      if lines % 10000 == 0:
+        print 'Parsed %d lines' % (lines)
+print(lines,count2)
 infile.close()
 outfile_meta.close()
 outfile_title.close()
